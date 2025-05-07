@@ -1,0 +1,4 @@
+rabbitmqENV
+.env
+__pycache__/
+notifications_service/.env

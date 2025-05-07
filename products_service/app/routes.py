@@ -6,6 +6,8 @@ from app.rabbitmq import publish_event
 
 router = APIRouter()
 
+
+
 @router.get("/products", response_model=List[Product])
 def get_products():
     return products_db
@@ -14,7 +16,9 @@ def get_products():
 def get_product(id: int):
     product = next((p for p in products_db if p.id == id), None)
     if product:
+        publish_event("product_found", product.dict())
         return product
+    publish_event("product_not_found", {})
     raise HTTPException(status_code=404, detail="Product not found")
 
 @router.post("/products", response_model=Product, status_code=201)

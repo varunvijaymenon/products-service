@@ -10,7 +10,7 @@ def publish_event(event_type: str, product_data: dict):
     try:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
         channel = connection.channel()
-        channel.queue_declare(queue=RABBITMQ_QUEUE)
+        channel.queue_declare(queue=RABBITMQ_QUEUE, durable=True)
         message = {"event": event_type, "data": product_data}
         channel.basic_publish(
             exchange='',
