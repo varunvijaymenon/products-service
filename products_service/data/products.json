@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "name": "Solar Powered Backpack",
+        "description": "Eco-friendly backpack with solar charging panel",
+        "price": 89.99,
+        "in_stock": true
+    },
+    {
+        "id": 2,
+        "name": "Smart Thermostat",
+        "description": "Wi-Fi connected thermostat with energy saving features",
+        "price": 129.99,
+        "in_stock": true
+    }
+]
