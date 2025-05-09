@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: product_events
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  consumer:
+    build: ./notifications_service
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_QUEUE=product_events
+
+  fastapi:
+    build:
+      context: ./products_service
+    ports:
+      - "8080:8080"  # Expose FastAPI to host
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_QUEUE=product_events

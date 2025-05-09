@@ -3,7 +3,7 @@ from typing import List
 from app.models import Product
 from pathlib import Path
 
-DATA_FILE = Path("data/products.json")
+DATA_FILE = Path(__file__).parent / "products.json"
 
 # Load initial products from JSON
 def load_products_from_json(filepath: Path = DATA_FILE) -> List[Product]:
@@ -19,4 +19,5 @@ def save_products_to_json(products: List[Product], filepath: Path = DATA_FILE):
         json.dump([product.dict() for product in products], f, indent=4)
 
 # Initialize product list
-products_db: List[Product] = load_products_from_json()
+products_db: List[Product] = load_products_from_json(DATA_FILE)
+# print(products_db)
