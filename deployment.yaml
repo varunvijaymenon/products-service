@@ -28,11 +28,13 @@ spec:
   selector:
     app: rabbitmq
   ports:
-    - port: 5672
-      name: amqp
-    - port: 15672
-      name: management
-  type: ClusterIP
+    - name: amqp
+      port: 5672         # Cluster-internal port
+      targetPort: 5672   # Matches containerPort
+    - name: management
+      port: 15672
+      targetPort: 15672
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -50,13 +52,15 @@ spec:
     spec:
       containers:
         - name: consumer
-          image: notification_service
+          image: notifications-service:latest
           imagePullPolicy: Never
           env:
             - name: RABBITMQ_HOST
-              value: rabbitmq
+              value: rabbitmq.default.svc.cluster.local
             - name: RABBITMQ_QUEUE
-              value: product_events
+              value: events
+            - name: RABBITMQ_PORT
+              value: '5672'
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -74,25 +78,106 @@ spec:
     spec:
       containers:
         - name: products
-          image: products-service
+          image: products-service:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
           env:
             - name: RABBITMQ_HOST
-              value: rabbitmq
+              value: rabbitmq.default.svc.cluster.local
             - name: RABBITMQ_QUEUE
-              value: product_events
+              value: events
+            - name: RABBITMQ_PORT
+              value: '5672'
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: products
 spec:
+  type: LoadBalancer
   selector:
     app: products
   ports:
     - port: 8080
       targetPort: 8080
-      nodePort: 30080
-  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders
+  template:
+    metadata:
+      labels:
+        app: orders
+    spec:
+      containers:
+        - name: orders
+          image: orders-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+          env:
+            - name: RABBITMQ_HOST
+              value: rabbitmq.default.svc.cluster.local
+            - name: RABBITMQ_QUEUE
+              value: events
+            - name: RABBITMQ_PORT
+              value: '5672'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders
+spec:
+  type: LoadBalancer
+  selector:
+    app: orders
+  ports:
+    - port: 8081
+      targetPort: 8081
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: suppliers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: suppliers
+  template:
+    metadata:
+      labels:
+        app: suppliers
+    spec:
+      containers:
+        - name: suppliers
+          image: suppliers-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8082
+          env:
+            - name: RABBITMQ_HOST
+              value: rabbitmq.default.svc.cluster.local
+            - name: RABBITMQ_QUEUE
+              value: events
+            - name: RABBITMQ_PORT
+              value: '5672'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: suppliers
+spec:
+  type: LoadBalancer
+  selector:
+    app: suppliers
+  ports:
+    - port: 8082
+      targetPort: 8082

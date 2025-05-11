@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Global Supplies Inc.",
+    "address": "123 Market Street, New York, NY 10001",
+    "phone_number": "+1-212-555-0198",
+    "email": "contact@globalsupplies.com"
+  },
+  {
+    "id": 2,
+    "name": "Alpha Distribution",
+    "address": "456 Commerce Ave, Los Angeles, CA 90017",
+    "phone_number": "+1-310-555-0147",
+    "email": "sales@alphadistribution.com"
+  },
+  {
+    "id": 3,
+    "name": "Blue Ocean Traders",
+    "address": "789 Harbor Blvd, Miami, FL 33101",
+    "phone_number": "+1-305-555-0123",
+    "email": "support@blueoceantraders.com"
+  }
+]

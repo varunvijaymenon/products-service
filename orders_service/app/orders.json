@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "customer_id": 101,
+    "order_date": "2025-05-10T14:23:00",
+    "product_id": 1,
+    "quantity": 3,
+    "order_status": "Processing"
+  },
+  {
+    "id": 2,
+    "customer_id": 102,
+    "order_date": "2025-05-09T09:45:00",
+    "product_id": 2,
+    "quantity": 1,
+    "order_status": "Shipped"
+  },
+  {
+    "id": 3,
+    "customer_id": 103,
+    "order_date": "2025-05-11T08:15:30",
+    "product_id": 3,
+    "quantity": 5,
+    "order_status": "Delivered"
+  }
+]

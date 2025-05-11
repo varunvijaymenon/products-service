@@ -10,7 +10,6 @@ RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', "5672")
 def publish_event(event_type: str, product_data: dict):
     try:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, port=int(RABBITMQ_PORT)))
-        print(str(connection))
         channel = connection.channel()
         channel.queue_declare(queue=RABBITMQ_QUEUE, durable=True)
         message = {"event": event_type, "data": product_data}
